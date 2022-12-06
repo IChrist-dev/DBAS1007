@@ -1,0 +1,130 @@
+INSERT INTO DEPARTMENT(deptID, deptName, deptLocation, deptDesc)
+VALUES 
+(1, 'Emergency', 'Meyer Building', 'Urgent care patient intake'),
+(2, 'Oncology', 'Hawthorn Building', 'Cancer treatment and research'),
+(3, 'Maternity', 'Meyer Building', 'Pediactric care'),
+(4, 'Neurology', 'Coburg Building', 'Treatment of brain related issues'),
+(5, 'Administration', 'Lawrence-Wright Building', 'Staff services and management');
+
+
+INSERT INTO ALL_DOCTORS(docID, deptID)
+VALUES ('DC34', 2),
+('DR12', 1),
+('DR41', 4),
+('DC88', 3),
+('DR54', 4),
+('DC89', 2);
+
+
+INSERT INTO DOC_QUALIFICATION(docQualID, levelName)
+VALUES
+(1, 'Medical Student'),
+(2, 'Intern'),
+(3, 'Fellow'),
+(4, 'Department Head'),
+(5, 'Junior Resident'),
+(6, 'Senior Resident'),
+(7, 'Chief Resident'),
+(8, 'Attending Physician'),
+(9, 'Medical Director');
+
+
+INSERT INTO WEB_EMAIL_LOGIN(email, `password`)
+VALUES
+('hford@cloudside.com', '3fhu&*d8az'),
+('bcassidy@cloudside.com', 'Summer of `69'),
+('jschrume@cloudside.com', 'roscoe the puppy'),
+('cschofield@cloudside.com', '5fd5351'),
+('smichaelson@cloudside.com', '87/gfsad%'),
+('bavery@cloudside.com', '478yhudf#'),
+('veronkitty@gmail.com', 'Mr. Meowzalot'),
+('faye@mcdonald.ca', 'carrots&beans'),
+('craftycroft@hotmail.com', '93rfd55$(('),
+('teddy-brad@gmail.com', 'password'),
+('jrenndog999@gmail.com', 'December 9th');
+
+
+INSERT INTO DOC_REG(docID, docName, docQualID, address, city, phone, salary, joinDate, email)
+VALUES
+('DR12', 'Dr. Harrison Ford', 8, '782 Stoneybrook Road', 'Belleterre', '455-848-3993', 225000, '1999-08-14', 'hford@cloudside.com'),
+('DR41', 'Butch Cassidy', 3, '85 Boyle Street', 'Belleterre', '455-855-3989', 65000, '2018-02-17', 'bcassidy@cloudside.com'),
+('DR54', 'Dr. Jebediah Schrume', 6, '7820 Queen Street', 'Belleterre', '455-348-4896', 120000, '2015-09-2', 'jschrume@cloudside.com');
+
+
+INSERT INTO DOC_ON_CALL(docID, docName, docQualID, address, phoneCell, phoneHome, phonePref, feePerCall, paymentDue, email)
+VALUES
+('DC34', 'Carl Schofield', 7, '78 Bard Way', '221-7834', '4891238', 'C', 28.99, 115.96, 'cschofield@cloudside.com'),
+('DC88', 'Sam Michaelson', 5, '235 Oakline Ave', '951-235-5842', '8153475', 'C', 15.87, 31.74, 'smichaelson@cloudside.com'),
+('DC89', 'Dr. Bonnie Avery', 8, '164 Quinn Street', '409-1555', '8889844251', 'H', 88.95, NULL, 'bavery@cloudside.com');
+
+
+INSERT INTO PAT_ENTRY(patID, patName, dBirth, sex, address, city, phone, email, dateEntry, refDocID, diagnosis, deptID, healthCardNum, emergContact, emergConPhone)
+VALUES
+('PT458', 'Phinneas Beech', '1928-12-30', 'M', '509 Danger Drive', 'Belleterre', '815-6654', NULL, '2022-08-15', 'DR12', 'Cardiac arrest', 1, 841225355, NULL, NULL),
+('PT668', 'Veronique Leblanc', '1991-05-03', 'F', '843 Faucet Street', 'Belleterre', '890-0547', 'veronkitty@gmail.com', '2022-09-20', 'DC88', 'Pregnacy checkup', 3, 623355879, 'Patrick Leblanc', '902-554-8448'),
+('PT669', 'Faye McDonald', '1963-03-22', 'F', '430 Aberdeen Court', 'Vingt Rivieres', '774-4565', 'faye@mcdonald.ca', '2022-10-03', 'DC89', 'Non-Hodgkins Lymphoma', 2, NULL, 'Mallory Smith', '440-458-6775'),
+('PT723', 'Owen Croft', '1947-11-06', 'M', '189 Saunders Street', 'Sherbrooke', '902-752-3540', 'craftycroft@hotmail.com', '2022-11-12', 'DC34', 'Multiple Myeloma', 2, NULL, 'Betty Croft', '655-8892'),
+('PT755', 'Theodore Bradetich', '1998-09-18', 'M', '12 Highview Ave.', 'Belleterre', '551-8567', 'teddy-brad@gmail.com', '2022-11-16', 'DR54', 'Migrane', 4, 564112983, 'Madelene Bradetich', '551-8567'),
+('PT789', 'Jeremy Renner', '1971-01-07', 'M', '588 Pepperell Street', 'Sherbrooke', '894-5412', 'jrenndog999@gmail.com', '2022-12-02', 'DR54', 'Loss of feeling in fingers', 4, 545898237, 'Sonni Pacheco', '879-545-5782');
+
+
+INSERT INTO PAT_CHKUP(patID, docID, checkUpDate, diagnosis, treatment, patStatus)
+VALUES
+('PT458', 'DR12', '2022-09-01', 'Cardiac arrest', 'Operation', 'referred'),
+('PT668', 'DC88', '2022-09-20', 'Pregnancy', 'Rest and more water', 'regular'),
+('PT669', 'DC89', '2022-10-03', 'Non-Hodgkins Lymphoma', 'Intralesional chemotherapy', 'regular'),
+('PT723', 'DC34', '2022-11-12', 'Multiple Myeloma', 'CSF chemotherapy', 'admitted'),
+('PT755', 'DR54', '2022-11-16', 'Subarachnoid hemorrhage', 'Operation', 'referred'),
+('PT789', 'DR54', '2022-12-02', 'Cervical radiculopathy', NULL, 'admitted');
+
+
+INSERT INTO ROOM_DETAILS(roomNum, roomType, roomOccupied, roomLocation, patID, chargePerDay)
+VALUES
+(14, 'G', 'Y', 1, 'PT458', 90.50),
+(15, 'G', 'Y', 1, 'PT755', 90.50),
+(16, 'P', 'N', 1, NULL, NULL),
+(17, 'P', 'N', 1, NULL, NULL),
+(46, 'P', 'Y', 2, 'PT669', 105.00),
+(47, 'P', 'Y', 2, 'PT723', 105.00),
+(48, 'P', 'N', 2, NULL, NULL),
+(65, 'P', 'Y', 4, 'PT668', 105.00),
+(102, 'G', 'Y', 4, 'PT789', 150.00);
+
+
+INSERT INTO  OP_THEATRE(opTheatreID, deptID)
+VALUES
+(1, 1),
+(2, 1),
+(3, 1),
+(4, 2),
+(5, 2),
+(6, 3),
+(7, 3),
+(8, 4),
+(9, 4);
+
+
+INSERT INTO PAT_ADMIT(patID, advancePay, modePay, roomNum, deptID, dateAdmit, initialCondition, diagnosis, treatment, treatDocID, nurseName)
+VALUES
+('PT723', 4600.00, 'credit', 47, 2, '2022-11-12', 'stable', 'Multiple Myeloma', 'CSF chemotherapy', 'DC34', 'Clair Dunsworth'),
+('PT669', NULL, 'deferred', 46, 2, '2022-10-03', 'priority', 'Non-Hodgkins Lymphoma', 'Intralesional chemotherapy', 'DC89', 'Caitlyn Davis');
+
+
+INSERT INTO PAT_REG(visitID, patID, dateVisit, diagnosis, treatment, medicineRecc, treatmentStatus)
+VALUES
+(426, 'PT668', '2022-09-20', 'Pregnancy', 'Rest and more water', NULL, 'healthy, mild fatigue'),
+(552, 'PT669', '2022-10-03', 'Non-Hodgkins Lymphoma', 'Intralesional chemotherapy', 'Arimidex', 'Stable, improving'),
+(584, 'PT669', '2022-10-03', 'Non-Hodgkins Lymphoma', 'Intralesional chemotherapy', 'Arimidex', 'Remission achieved');
+
+
+INSERT INTO PAT_OPR(patID, dateAdmit, dateOperation, operatingDocID, opTheatreID, preCondition, postCondition, treatmentRecc)
+VALUES
+('PT458', '2022-09-01', '2022-09-01', 'DR12', 2, 'Critical', 'Stable', 'Aspirin and oxygen therapy'),
+('PT755', '2022-11-16', '2022-11-16', 'DR54', 3, 'Routine', 'Stable', 'Rest');
+
+
+INSERT INTO PAT_DIS(patID, treatmentGiven, treatmentReccomended, paymentMade, modePay, dateDischarge, exitComments)
+VALUES
+('PT458', 'Triple bypass surgery', 'Rest and aspirin as needed', 'Y', 'debit', '2022-09-03', NULL),
+('PT669', 'Intralesional chemotherapy', 'Remission - no treatment', 'N', 'deferred', '2022-10-05', 'pleasant attitude'),
+('PT789', 'Ice and massage', 'Avoid exercise for one week', 'Y', 'credit', '2022-12-03', 'Potential hypochondriac');

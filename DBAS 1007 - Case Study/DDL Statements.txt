@@ -1,0 +1,198 @@
+CREATE TABLE DEPARTMENT(
+    deptID int,
+    deptName varchar(50) UNIQUE NOT NULL, 
+    deptLocation varchar(50) NOT NULL,
+    deptDesc varchar(255) NOT NULL,
+    PRIMARY KEY (deptID)
+);
+
+
+CREATE TABLE ALL_DOCTORS(
+    docID varchar(20),
+    deptID int NOT NULL,
+    PRIMARY KEY (docID),
+    FOREIGN KEY (deptID) REFERENCES department(deptID)    
+);
+ALTER TABLE ALL_DOCTORS
+ADD CHECK (docID LIKE 'DC%' OR (docID LIKE 'DR%'));
+
+
+CREATE TABLE DOC_QUALIFICATION(
+    docQualID int,
+    levelName varchar(50) NOT NULL,
+    PRIMARY KEY (docQualID)
+);
+
+CREATE TABLE WEB_EMAIL_LOGIN(
+    email varchar(50),
+    password varchar(50),
+    PRIMARY KEY (email)
+);
+
+
+CREATE TABLE DOC_REG(
+    docID varchar(20),
+    docName varchar(50) NOT NULL,
+    docQualID int NOT NULL,
+    address varchar(50) NOT NULL,
+    city varchar(50) NOT NULL,
+    phone varchar(15) NOT NULL,
+    salary decimal(9,2) NOT NULL,
+    joinDate date NOT NULL,
+    email varchar(50) NOT NULL,
+    PRIMARY KEY (docID),
+    FOREIGN KEY (docID) REFERENCES ALL_DOCTORS(docID),
+    FOREIGN KEY (docQualID) REFERENCES DOC_QUALIFICATION(docQualID),
+    FOREIGN KEY (email) REFERENCES WEB_EMAIL_LOGIN(email)
+);
+
+
+CREATE TABLE DOC_ON_CALL(
+    docID varchar(20),
+    docName varchar(50) NOT NULL,
+    docQualID int NOT NULL,
+    address varchar(50) NOT NULL,
+    phoneCell varchar(15) NOT NULL,
+    phoneHome varchar(15) NOT NULL,
+    phonePref varchar(1) NOT NULL,
+    feePerCall decimal(6,2) NOT NULL,
+    paymentDue decimal(8,2),
+    email varchar(50) NOT NULL,
+    PRIMARY KEY (docID),
+    FOREIGN KEY (docID) REFERENCES ALL_DOCTORS(docID),
+    FOREIGN KEY (docQualID) REFERENCES DOC_QUALIFICATION(docQualID),
+    FOREIGN KEY (email) REFERENCES WEB_EMAIL_LOGIN(email)
+);
+ALTER TABLE DOC_ON_CALL
+ADD CHECK (phonePref IN ('C', 'H'));
+
+CREATE TABLE PAT_ENTRY(
+    patID varchar(20),
+    patName varchar(50) NOT NULL,
+    dBirth date NOT NULL,
+    sex varchar(1) NOT NULL,
+    address varchar(50),
+    city varchar(50),
+    phone varchar(15),
+    email varchar(50),
+    dateEntry date NOT NULL,
+    refDocID varchar(20),
+    diagnosis varchar(50),
+    deptID int,
+    healthCardNum int,
+    emergContact varchar(50),
+    emergConPhone varchar(15),
+    PRIMARY KEY (patID),
+    FOREIGN KEY (refDocID) REFERENCES ALL_DOCTORS(docID),
+    FOREIGN KEY (deptID) REFERENCES DEPARTMENT(deptID),
+    FOREIGN KEY (email) REFERENCES WEB_EMAIL_LOGIN(email)
+);
+ALTER TABLE PAT_ENTRY
+ADD CHECK (patID LIKE 'PT%'),
+ADD CHECK (sex IN ('M', 'F'));
+
+
+CREATE TABLE PAT_CHKUP(
+    patID varchar(20),
+    docID varchar(20) NOT NULL,
+    checkUpDate date NOT NULL,
+    diagnosis varchar(50),
+    treatment varchar(50),
+    patStatus varchar(8) NOT NULL,
+    PRIMARY KEY (patID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID),
+    FOREIGN KEY (docID) REFERENCES ALL_DOCTORS(docID)
+);
+ALTER TABLE PAT_CHKUP
+ADD CHECK (patStatus IN ('admitted', 'referred', 'regular'));
+
+
+CREATE TABLE PAT_DIS(
+    patID varchar(20),
+    treatmentGiven varchar(50),
+    treatmentReccomended varchar(50),
+    paymentMade varchar(1) NOT NULL,
+    modePay varchar(20),
+    dateDischarge date NOT NULL,
+    exitComments varchar(255),
+    PRIMARY KEY (patID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID)
+);
+ALTER TABLE PAT_DIS
+ADD CHECK (paymentMade IN ('Y', 'N')),
+ADD CHECK (modePay IN ('debit', 'credit', 'deferred'));
+
+
+CREATE TABLE PAT_REG(
+    visitID int,
+    patID varchar(20) NOT NULL,
+    dateVisit date NOT NULL,
+    diagnosis varchar(50),
+    treatment varchar(50),
+    medicineRecc varchar(50),
+    treatmentStatus varchar(50),
+    PRIMARY KEY (visitID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID)
+);
+
+
+CREATE TABLE OP_THEATRE(
+    opTheatreID int,
+    deptID int,
+    PRIMARY KEY (opTheatreID),
+    FOREIGN KEY (deptID) REFERENCES DEPARTMENT(deptID)
+);
+
+
+CREATE TABLE PAT_OPR(
+    patID varchar(20),
+    dateAdmit date NOT NULL,
+    dateOperation date NOT NULL,
+    operatingDocID varchar(20) NOT NULL,
+    opTheatreID int NOT NULL,
+    preCondition varchar(50) NOT NULL,
+    postCondition varchar(50) NOT NULL,
+    treatmentRecc varchar(255),
+    PRIMARY KEY (patID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID),
+    FOREIGN KEY (operatingDocID) REFERENCES ALL_DOCTORS(docID)
+);
+
+
+CREATE TABLE ROOM_DETAILS(
+    roomNum int,
+    roomType varchar(1) NOT NULL,
+    roomOccupied varchar(1) NOT NULL,
+    roomLocation int NOT NULL,
+    patID varchar(20),
+    patName varchar(50),
+    chargePerDay decimal(6,2),
+    PRIMARY KEY (roomNum),
+    FOREIGN KEY (roomLocation) REFERENCES DEPARTMENT(deptID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID)
+);
+ALTER TABLE ROOM_DETAILS
+ADD CHECK (roomType IN ('G', 'P')),
+ADD CHECK (roomOccupied IN ('Y', 'N'));
+
+
+CREATE TABLE PAT_ADMIT(
+    patID varchar(20),
+    advancePay decimal (8,2),
+    modePay varchar(20),
+    roomNum int NOT NULL,
+    deptID int NOT NULL,
+    dateAdmit date NOT NULL,
+    initialCondition varchar(50) NOT NULL,
+    diagnosis varchar(50),
+    treatment varchar(50),
+    treatDocID varchar(20),
+    nurseName varchar(50),
+    PRIMARY KEY (patID),
+    FOREIGN KEY (patID) REFERENCES PAT_ENTRY(patID),
+    FOREIGN KEY (roomNum) REFERENCES ROOM_DETAILS(roomNum),
+    FOREIGN KEY (deptID) REFERENCES DEPARTMENT(deptID),
+    FOREIGN KEY (treatDocID) REFERENCES ALL_DOCTORS(docID)
+);
+ALTER TABLE PAT_ADMIT
+ADD CHECK (modePay IN ('debit', 'credit', 'deferred'));
